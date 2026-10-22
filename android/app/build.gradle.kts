@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flutter_boilerplate" // اصلاح شد
+    namespace = "com.example.flutter_boilerplate" // این باید همین بماند تا کدها کار کنند
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
@@ -19,7 +19,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.flutter_boilerplate" // اصلاح شد
+        applicationId = "com.adel.javid" // <--- این خط تغییر کرد
         minSdk = flutter.minSdkVersion
         targetSdk = 36
         versionCode = flutter.versionCode
