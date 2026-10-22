@@ -15,8 +15,6 @@ workflows:
         script: flutter pub get
       - name: Generate Android folder with unique ID
         script: flutter create . --platforms=android --org com.adeljavid
-      - name: Change App Name
-        script: sed -i 's/android:label="real_estate_app"/android:label="املاک جاوید"/g' android/app/src/main/AndroidManifest.xml
       - name: Build APK
         script: flutter build apk --release
     artifacts:
