@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shamsi_date/shamsi_date.dart';
 
 void main() async {
@@ -27,7 +26,7 @@ class JavidRealEstateApp extends StatelessWidget {
   }
 }
 
-// ------------------ ۱. صفحه ورود ------------------
+// ------------------ ۱. صفحه ورود (بدون لودینگ اولیه) ------------------
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -37,42 +36,17 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = true;
 
-  @override
-  void initState() {
-    super.initState();
-    _checkLogin();
-  }
-
-  Future<void> _checkLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    if (isLoggedIn) {
-      if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainDashboard()));
+  void _login() {
+    if (_passwordController.text == '1234') {
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainDashboard()));
     } else {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _login() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String savedPassword = prefs.getString('password') ?? '1234';
-
-    if (_passwordController.text == savedPassword) {
-      await prefs.setBool('isLoggedIn', true);
-      if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainDashboard()));
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('رمز عبور اشتباه است!'), backgroundColor: Colors.red));
-      }
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('رمز عبور اشتباه است!'), backgroundColor: Colors.red));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) return const Scaffold(body: Center(child: CircularProgressIndicator()));
-
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
@@ -138,10 +112,8 @@ class _MainDashboardState extends State<MainDashboard> {
           actions: [
             IconButton(
               icon: const Icon(Icons.logout, color: Colors.white),
-              onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.setBool('isLoggedIn', false);
-                if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+              onPressed: () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
               },
             )
           ],
