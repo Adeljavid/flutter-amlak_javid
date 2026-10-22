@@ -5,8 +5,8 @@ plugins {
 }
 
 android {
-    namespace = "com.example.real_estate_app"
-    compileSdk = 36 // نسخه به 36 ارتقا یافت
+    namespace = "com.example.flutter_boilerplate" // اصلاح شد
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
@@ -19,9 +19,9 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.real_estate_app"
+        applicationId = "com.example.flutter_boilerplate" // اصلاح شد
         minSdk = flutter.minSdkVersion
-        targetSdk = 36 // نسخه به 36 ارتقا یافت
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
