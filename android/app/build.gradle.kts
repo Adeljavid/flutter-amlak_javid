@@ -6,22 +6,22 @@ plugins {
 
 android {
     namespace = "com.example.real_estate_app"
-    compileSdk = 34
+    compileSdk = 36 // نسخه به 36 ارتقا یافت
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     defaultConfig {
         applicationId = "com.example.real_estate_app"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 36 // نسخه به 36 ارتقا یافت
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
