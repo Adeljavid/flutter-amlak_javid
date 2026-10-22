@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:shamsi_date/shamsi_date.dart'; // اضافه شدن تاریخ شمسی
+import 'package:shamsi_date/shamsi_date.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String savedPassword = prefs.getString('password') ?? '1234'; // رمز پیش فرض 1234
+    String savedPassword = prefs.getString('password') ?? '1234';
 
     if (_passwordController.text == savedPassword) {
       await prefs.setBool('isLoggedIn', true);
@@ -137,6 +137,16 @@ class _MainDashboardState extends State<MainDashboard> {
           title: const Text('املاک جاوید', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
           backgroundColor: const Color(0xFF1E3A5F),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout, color: Colors.white),
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setBool('isLoggedIn', false);
+                if (mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginScreen()));
+              },
+            )
+          ],
         ),
         body: IndexedStack(
           index: _currentIndex,
@@ -165,11 +175,10 @@ class _MainDashboardState extends State<MainDashboard> {
   }
 }
 
-// ------------------ ۳. صفحه لیست املاک (با دکمه پیامک داینامیک) ------------------
+// ------------------ ۳. لیست املاک (با پیامک هوشمند) ------------------
 class PropertiesListScreen extends StatelessWidget {
   const PropertiesListScreen({super.key});
 
-  // تابع ارسال پیامک: حالا تاریخ پایان رو از خود ملک می‌گیره
   Future<void> _sendSms(String phoneNumber, String endDate) async {
     final String message = 'مالک محترم و مستأجر گرامی، با سلام و احترام؛ به اطلاع می‌رساند مدت قرارداد اجاره ملک شما در تاریخ $endDate به پایان می‌رسد. خواهشمند است جهت هماهنگی و تعیین شرایط تمدید قرارداد، در اسرع وقت با مشاور املاک جاوید تماس حاصل فرمایید. با سپاس';
     final Uri smsUri = Uri.parse('sms:$phoneNumber?body=$message');
@@ -181,8 +190,7 @@ class PropertiesListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // دیتای تستی برای نمایش (در دیتابیس واقعی، این‌ها از Supabase خونده میشن)
-    const String testEndDate = '1404/05/12'; 
+    const String testEndDate = '1404/05/12';
     
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -224,7 +232,6 @@ class PropertiesListScreen extends StatelessWidget {
                     const SizedBox(width: 8),
                     ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                      // دکمه پیامک، تاریخ همون ملک رو به تابع می‌فرسته
                       onPressed: () => _sendSms('09123456789', testEndDate), 
                       icon: const Icon(Icons.sms, size: 18, color: Colors.white),
                       label: const Text('ارسال پیامک', style: TextStyle(color: Colors.white)),
@@ -240,7 +247,7 @@ class PropertiesListScreen extends StatelessWidget {
   }
 }
 
-// ------------------ ۴. صفحه لیست خواهان‌ها ------------------
+// ------------------ ۴. لیست خواهان‌ها ------------------
 class ApplicantsListScreen extends StatelessWidget {
   const ApplicantsListScreen({super.key});
 
@@ -250,7 +257,7 @@ class ApplicantsListScreen extends StatelessWidget {
   }
 }
 
-// ------------------ ۵. فرم ثبت ملک (با تاریخ ثبت خودکار) ------------------
+// ------------------ ۵. فرم ثبت ملک ------------------
 class PropertyFormScreen extends StatefulWidget {
   const PropertyFormScreen({super.key});
 
@@ -260,9 +267,13 @@ class PropertyFormScreen extends StatefulWidget {
 
 class _PropertyFormScreenState extends State<PropertyFormScreen> {
   String dealType = 'اجاره';
-  // گرفتن تاریخ امروز به صورت خودکار
-  final now = Jalali.now();
-final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
+  
+  // این بخش اصلاح شد (استفاده از get)
+  String get todayDate {
+    final now = Jalali.now();
+    return '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -270,7 +281,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // نمایش تاریخ ثبت در بالای فرم
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -279,7 +289,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
             ],
           ),
           const SizedBox(height: 12),
-
           _sectionTitle('اطلاعات مالک'),
           _inputField('نام و نام خانوادگی مالک'),
           const SizedBox(height: 12),
@@ -287,7 +296,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
           const SizedBox(height: 12),
           _inputField('آدرس مالک'),
           const SizedBox(height: 20),
-
           _sectionTitle('اطلاعات ملک'),
           Row(
             children: [
@@ -307,7 +315,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
             ],
           ),
           const SizedBox(height: 20),
-
           _sectionTitle('اطلاعات قرارداد'),
           Row(
             children: [
@@ -317,7 +324,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
             ],
           ),
           const SizedBox(height: 20),
-
           _sectionTitle('اطلاعات مالی'),
           Row(
             children: [
@@ -327,7 +333,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
             ],
           ),
           const SizedBox(height: 30),
-
           SizedBox(
             width: double.infinity,
             height: 50,
@@ -345,7 +350,7 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
   }
 }
 
-// ------------------ ۶. فرم ثبت خواهان (با تاریخ ثبت خودکار) ------------------
+// ------------------ ۶. فرم ثبت خواهان ------------------
 class ApplicantFormScreen extends StatefulWidget {
   const ApplicantFormScreen({super.key});
 
@@ -354,8 +359,11 @@ class ApplicantFormScreen extends StatefulWidget {
 }
 
 class _ApplicantFormScreenState extends State<ApplicantFormScreen> {
-  final now = Jalali.now();
-final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
+  // این بخش اصلاح شد (استفاده از get)
+  String get todayDate {
+    final now = Jalali.now();
+    return '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -372,7 +380,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
             ],
           ),
           const SizedBox(height: 12),
-
           _sectionTitle('مشخصات خواهان'),
           _inputField('نام و نام خانوادگی'),
           const SizedBox(height: 12),
@@ -380,7 +387,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
           const SizedBox(height: 12),
           _inputField('آدرس'),
           const SizedBox(height: 20),
-
           _sectionTitle('درخواست مورد نظر'),
           Row(
             children: [
@@ -402,7 +408,6 @@ final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${
           const SizedBox(height: 12),
           _inputField('توضیحات اضافه'),
           const SizedBox(height: 30),
-
           SizedBox(
             width: double.infinity,
             height: 50,
