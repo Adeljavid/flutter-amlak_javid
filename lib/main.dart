@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shamsi_date/shamsi_date.dart';
@@ -20,7 +19,7 @@ class JavidRealEstateApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFFF7F8FA),
         primaryColor: const Color(0xFF1E3A5F),
-        textTheme: GoogleFonts.vazirmatnTextTheme(),
+        fontFamily: 'Vazirmatn', // اعمال فونت آفلاین وزیرمتن
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF1E3A5F)),
       ),
@@ -59,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> _login() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String savedPassword = prefs.getString('password') ?? '1234';
+    String savedPassword = prefs.getString('password') ?? '1234'; // رمز پیش‌فرض
 
     if (_passwordController.text == savedPassword) {
       await prefs.setBool('isLoggedIn', true);
@@ -268,7 +267,6 @@ class PropertyFormScreen extends StatefulWidget {
 class _PropertyFormScreenState extends State<PropertyFormScreen> {
   String dealType = 'اجاره';
   
-  // این بخش اصلاح شد (استفاده از get)
   String get todayDate {
     final now = Jalali.now();
     return '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
@@ -359,7 +357,6 @@ class ApplicantFormScreen extends StatefulWidget {
 }
 
 class _ApplicantFormScreenState extends State<ApplicantFormScreen> {
-  // این بخش اصلاح شد (استفاده از get)
   String get todayDate {
     final now = Jalali.now();
     return '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
