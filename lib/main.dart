@@ -261,8 +261,8 @@ class PropertyFormScreen extends StatefulWidget {
 class _PropertyFormScreenState extends State<PropertyFormScreen> {
   String dealType = 'اجاره';
   // گرفتن تاریخ امروز به صورت خودکار
-  final String todayDate = Jalali.now().format('yyyy/MM/dd'); 
-
+  final now = Jalali.now();
+final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -354,7 +354,8 @@ class ApplicantFormScreen extends StatefulWidget {
 }
 
 class _ApplicantFormScreenState extends State<ApplicantFormScreen> {
-  final String todayDate = Jalali.now().format('yyyy/MM/dd');
+  final now = Jalali.now();
+final String todayDate = '${now.year}/${now.month.toString().padLeft(2, '0')}/${now.day.toString().padLeft(2, '0')}';
 
   @override
   Widget build(BuildContext context) {
