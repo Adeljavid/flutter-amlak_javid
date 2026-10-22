@@ -12,8 +12,8 @@ dependencies:
   google_fonts: ^6.2.1
   url_launcher: ^6.2.5
   shared_preferences: ^2.2.2
-  shamsi_date: ^0.19.0 # پکیج تاریخ شمسی
-
+  shamsi_date: ^1.1.1
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
